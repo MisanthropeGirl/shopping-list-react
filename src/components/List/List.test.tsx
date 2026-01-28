@@ -1,9 +1,9 @@
 /// <reference types="@testing-library/jest-dom" />
 import { render, screen } from "@testing-library/react";
-import App from "./App";
+import List from "./List";
 
 test("renders without crashing", () => {
-  render(<App />);
+  render(<List />);
 
-  expect(screen.getByText(/Shopping List/)).toBeInTheDocument();
+  expect(screen.getByRole("list")).toBeInTheDocument();
 });

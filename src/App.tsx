@@ -1,4 +1,5 @@
 import "./App.css";
+import List from "./components/List/List";
 
 function App() {
   return (
@@ -6,7 +7,9 @@ function App() {
       <header>
         <h1>Shopping List</h1>
       </header>
-      <main></main>
+      <main>
+        <List />
+      </main>
       <footer></footer>
     </>
   );
