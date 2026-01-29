@@ -3,12 +3,15 @@ import { render, screen } from "@testing-library/react";
 import List from "./List";
 import { ShoppingListContext } from "../../app/ShoppingListContext";
 
+const removeUnwantedItem = jest.fn();
+const setFeedback = jest.fn();
+
 describe("List", () => {
   test("renders without crashing", () => {
     const items = [] as string[];
     render(
       <ShoppingListContext value={items}>
-        <List />
+        <List removeUnwantedItem={removeUnwantedItem} setFeedback={setFeedback} />
       </ShoppingListContext>,
     );
 
@@ -20,7 +23,7 @@ describe("List", () => {
     const items = ["Milk", "Butter", "Cheese", "Yogurt"];
     render(
       <ShoppingListContext value={items}>
-        <List />
+        <List removeUnwantedItem={removeUnwantedItem} setFeedback={setFeedback} />
       </ShoppingListContext>,
     );
 
@@ -29,5 +32,10 @@ describe("List", () => {
     const list = screen.getByRole("list");
     expect(list).toBeInTheDocument();
     expect(list.children.length).toBe(items.length);
+
+    expect(list).toHaveTextContent("Milk");
+    expect(list).toHaveTextContent("Butter");
+    expect(list).toHaveTextContent("Cheese");
+    expect(list).toHaveTextContent("Yogurt");
   });
 });

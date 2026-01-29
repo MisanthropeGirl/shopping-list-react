@@ -35,10 +35,16 @@ test.describe("Functionality", () => {
     await input.fill("Milk");
     await button.click();
 
+    const list = page.getByRole("list");
+
     await expect(input).toHaveValue("");
     await expect(button).toBeDisabled();
-    await expect(page.getByText(/Item added/)).toBeVisible();
-    await expect(page.getByRole("list")).toContainText("Milk");
+    await expect(list).toBeVisible;
+    await expect(list).toContainText("Milk");
+
+    const msg = page.getByTestId("feedback");
+    await expect(msg).toHaveText(/Item added/);
+    await expect(msg).not.toHaveClass("msg-error");
   });
 
   test("Should show an error message when there is a duplicate item", async ({ page }) => {
@@ -57,6 +63,37 @@ test.describe("Functionality", () => {
 
     await expect(input).toHaveValue("Milk");
     await expect(button).toBeEnabled();
-    await expect(page.getByText(/Item already added/)).toBeVisible();
+
+    const msg = page.getByTestId("feedback");
+    await expect(msg).toHaveText(/Item already added/);
+    await expect(msg).toHaveClass("msg msg-error");
+  });
+
+  test("Should show a success message when an item is removed and hide the list if all items removed", async ({
+    page,
+  }) => {
+    const input = page.getByRole("textbox", { name: "Add an item:" });
+    const btnAdd = page.getByRole("button", { name: /add/i });
+
+    await input.fill("Milk");
+    await btnAdd.click();
+
+    await input.fill("Butter");
+    await btnAdd.click();
+
+    const list = page.getByRole("list");
+    const btnRemoveMilk = page.getByRole("button", { name: /remove milk/i });
+    const btnRemoveButter = page.getByRole("button", { name: /remove butter/i });
+
+    await btnRemoveMilk.click();
+
+    const msg = page.getByTestId("feedback");
+    await expect(msg).toHaveText(/Item removed/);
+    await expect(msg).not.toHaveClass("msg-error");
+
+    await btnRemoveButter.click();
+
+    expect(list).not.toBeVisible();
+    await expect(page.getByText(/Your shopping list is currently empty/)).toBeVisible();
   });
 });

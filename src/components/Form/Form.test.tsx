@@ -4,10 +4,12 @@ import userEvent from "@testing-library/user-event";
 import Form from "./Form";
 import { ShoppingListContext } from "../../app/ShoppingListContext";
 
+const addNewItem = jest.fn();
+const setFeedback = jest.fn();
+
 describe("Form", () => {
   test("renders without crashing", () => {
-    const addNewItem = jest.fn();
-    render(<Form addNewItem={addNewItem} />);
+    render(<Form addNewItem={addNewItem} setFeedback={setFeedback} />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
     const btn: HTMLButtonElement = screen.getByRole("button", { name: "add" });
@@ -18,24 +20,22 @@ describe("Form", () => {
     expect(btn.disabled).toBe(true);
   });
 
-  test("Button should not be enabled when input is just spaces", () => {
+  test("Button should not be enabled when input is just spaces", async () => {
     const user = userEvent.setup();
 
-    const addNewItem = jest.fn();
-    render(<Form addNewItem={addNewItem} />);
+    render(<Form addNewItem={addNewItem} setFeedback={setFeedback} />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
     const btn: HTMLButtonElement = screen.getByRole("button", { name: "add" });
 
-    user.type(input, "   ");
+    await user.type(input, "   ");
     expect(btn.disabled).toBe(true);
   });
 
   test("Button should be enabled when there is a valid input and disabled when not", async () => {
     const user = userEvent.setup();
 
-    const addNewItem = jest.fn();
-    render(<Form addNewItem={addNewItem} />);
+    render(<Form addNewItem={addNewItem} setFeedback={setFeedback} />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
     const btn: HTMLButtonElement = screen.getByRole("button", { name: "add" });
@@ -47,11 +47,10 @@ describe("Form", () => {
     expect(btn.disabled).toBe(true);
   });
 
-  test("Should show an error message when there is nothing to add", async () => {
+  test("Should do nothing when there is nothing to add", async () => {
     const user = userEvent.setup();
 
-    const addNewItem = jest.fn();
-    render(<Form addNewItem={addNewItem} />);
+    render(<Form addNewItem={addNewItem} setFeedback={setFeedback} />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
     const form = input.closest("form")!;
@@ -60,17 +59,16 @@ describe("Form", () => {
     fireEvent.submit(form);
 
     expect(input).toHaveValue("   ");
-    expect(screen.queryByText(/Nothing to add/)).toBeInTheDocument();
+    // expect(screen.queryByText(/Nothing to add/)).toBeInTheDocument();
   });
 
-  test("Should show an error message when there is a duplicate item", async () => {
+  test("Should do nothing there is a duplicate item", async () => {
     const user = userEvent.setup();
 
-    const addNewItem = jest.fn();
     const items = ["Milk", "Butter", "Cheese", "Yogurt"];
     render(
       <ShoppingListContext value={items}>
-        <Form addNewItem={addNewItem} />
+        <Form addNewItem={addNewItem} setFeedback={setFeedback} />
       </ShoppingListContext>,
     );
 
@@ -82,14 +80,13 @@ describe("Form", () => {
 
     expect(input).toHaveValue("Milk");
     expect(btn.disabled).toBe(false);
-    expect(screen.queryByText(/Item already added/)).toBeInTheDocument();
+    // expect(screen.queryByText(/Item already added/)).toBeInTheDocument();
   });
 
-  test("Should show a success message and reset the form when an item is successfully added", async () => {
+  test("Should reset the form when an item is successfully added", async () => {
     const user = userEvent.setup();
 
-    const addNewItem = jest.fn();
-    render(<Form addNewItem={addNewItem} />);
+    render(<Form addNewItem={addNewItem} setFeedback={setFeedback} />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
     const btn: HTMLButtonElement = screen.getByRole("button", { name: "add" });
@@ -99,6 +96,6 @@ describe("Form", () => {
 
     expect(input).toHaveValue("");
     expect(btn.disabled).toBe(true);
-    expect(screen.queryByText(/Item added/)).toBeInTheDocument();
+    // expect(screen.queryByText(/Item added/)).toBeInTheDocument();
   });
 });

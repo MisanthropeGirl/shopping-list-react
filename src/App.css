@@ -22,3 +22,69 @@ h1 {
 .msg--error {
   color: red;
 }
+
+p,
+ul {
+  margin: 0 0 2rem;
+}
+
+ul {
+  height: 30rem;
+  column-width: 30ch;
+  gap: 1rem;
+  column-fill: auto;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+button,
+input {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+form button {
+  height: 30px;
+  width: 30px;
+}
+
+input {
+  padding: 4px 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  height: 2rem;
+}
+
+.item__name {
+  flex: 1;
+}
+
+.item button {
+  height: 24px;
+  width: 24px;
+  border: 1px solid #7676764d;
+  border-radius: 50%;
+}
+
+.btn-add:not(:disabled) {
+  background-color: #11ff00;
+}
+
+.btn-remove {
+  background-color: red;
+  color: white;
+}

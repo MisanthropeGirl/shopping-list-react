@@ -1,20 +1,14 @@
 import { useContext, useState, type ChangeEvent, type SubmitEvent } from "react";
-import "./Form.css";
+import type { Feedback } from "../../typings";
 import { ShoppingListContext } from "../../app/ShoppingListContext";
 
 interface FormProps {
   addNewItem: (newItem: string) => void;
+  setFeedback: (feedback: Feedback | null) => void;
 }
 
-interface Feedback {
-  type: "error" | "success";
-  msg: string;
-}
-
-function Form({ addNewItem }: FormProps) {
+function Form({ addNewItem, setFeedback }: FormProps) {
   const [item, setItem] = useState<string>("");
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
-
   const items = useContext(ShoppingListContext);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -32,34 +26,37 @@ function Form({ addNewItem }: FormProps) {
     const newItem = newItemRaw.trim();
 
     if (!newItem || newItem === "") {
-      setFeedback({ type: "error", msg: "Nothing to add" });
+      setFeedback({ msg: "Nothing to add", type: "error" });
     } else if (items.indexOf(newItem) > -1) {
-      setFeedback({ type: "error", msg: "Item already added" });
+      setFeedback({ msg: "Item already added", type: "error" });
     } else {
       addNewItem(newItem);
-      setFeedback({ type: "success", msg: "Item added" });
+      setFeedback({ msg: "Item added" });
       setItem("");
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmission}>
-        <label htmlFor="new-item-input">Add an item:</label>
-        <input
-          type="text"
-          name="new-item"
-          id="new-item-input"
-          value={item}
-          onChange={handleInputChange}
-        />
-        <button type="submit" name="add" aria-label="add" title="Add" disabled={item.trim() === ""}>
-          +
-        </button>
-      </form>
-      {/* Should have this vanish after a period */}
-      {feedback && <p className={`msg msg--${feedback.type}`}>{feedback.msg}</p>}
-    </>
+    <form onSubmit={handleSubmission}>
+      <label htmlFor="new-item-input">Add an item:</label>
+      <input
+        type="text"
+        name="new-item"
+        id="new-item-input"
+        value={item}
+        onChange={handleInputChange}
+      />
+      <button
+        type="submit"
+        name="add"
+        aria-label="add"
+        title="Add"
+        className="btn-add"
+        disabled={item.trim() === ""}
+      >
+        +
+      </button>
+    </form>
   );
 }
 
