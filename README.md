@@ -1,4 +1,4 @@
-# Shopping List (React)
+# Shopping List (React)
 
 ## Stories
 
