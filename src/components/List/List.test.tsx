@@ -1,17 +1,23 @@
 /// <reference types="@testing-library/jest-dom" />
 import { render, screen } from "@testing-library/react";
-import List from "./List";
+import type { Item } from "../../typings";
 import { ShoppingListContext } from "../../app/ShoppingListContext";
+import List from "./List";
 
+const crossOffItem = jest.fn();
 const removeUnwantedItem = jest.fn();
 const setFeedback = jest.fn();
 
 describe("List", () => {
   test("renders without crashing", () => {
-    const items = [] as string[];
+    const items = [] as Item[];
     render(
       <ShoppingListContext value={items}>
-        <List removeUnwantedItem={removeUnwantedItem} setFeedback={setFeedback} />
+        <List
+          crossOffItem={crossOffItem}
+          removeUnwantedItem={removeUnwantedItem}
+          setFeedback={setFeedback}
+        />
       </ShoppingListContext>,
     );
 
@@ -20,10 +26,19 @@ describe("List", () => {
   });
 
   test("Shows the list when there are items", () => {
-    const items = ["Milk", "Butter", "Cheese", "Yogurt"];
+    const items = [
+      { name: "Milk", crossedOff: false },
+      { name: "Butter", crossedOff: false },
+      { name: "Cheese", crossedOff: false },
+      { name: "Yogurt", crossedOff: false },
+    ];
     render(
       <ShoppingListContext value={items}>
-        <List removeUnwantedItem={removeUnwantedItem} setFeedback={setFeedback} />
+        <List
+          crossOffItem={crossOffItem}
+          removeUnwantedItem={removeUnwantedItem}
+          setFeedback={setFeedback}
+        />
       </ShoppingListContext>,
     );
 

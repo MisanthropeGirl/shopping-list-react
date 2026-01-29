@@ -3,15 +3,16 @@ import type { Feedback } from "../../typings";
 import { ShoppingListContext } from "../../app/ShoppingListContext";
 
 interface ListProps {
+  crossOffItem: (bought: string) => void;
   removeUnwantedItem: (unwanted: string) => void;
   setFeedback: (feedback: Feedback | null) => void;
 }
 
-function List({ removeUnwantedItem, setFeedback }: ListProps) {
+function List({ removeUnwantedItem, setFeedback, crossOffItem }: ListProps) {
   const items = useContext(ShoppingListContext);
 
-  const removeItem = (item: string) => {
-    removeUnwantedItem(item);
+  const removeItem = (name: string) => {
+    removeUnwantedItem(name);
     setFeedback({ msg: "Item removed" });
   };
 
@@ -22,20 +23,37 @@ function List({ removeUnwantedItem, setFeedback }: ListProps) {
   return (
     <ul>
       {items.map(item => {
+        const name = item.name;
+        const displayName = item.crossedOff ? <s>{item.name}</s> : item.name;
+
         return (
-          <li key={item.toLowerCase().replace(" ", "-")}>
+          <li key={name.toLowerCase().replace(" ", "-")}>
             <div className="item">
-              <span className="item__name">{item}</span>
-              <button
-                type="button"
-                name="remove"
-                aria-label={`remove ${item}`}
-                title="Remove"
-                className="btn-remove"
-                onClick={() => removeItem(item)}
-              >
-                &times;
-              </button>
+              <span className="item__name">{displayName}</span>
+              <div className="item__btns">
+                {!item.crossedOff && (
+                  <button
+                    type="button"
+                    name="cross-off"
+                    aria-label={`cross off ${name}`}
+                    title="Cross off"
+                    className="btn--cross-off"
+                    onClick={() => crossOffItem(name)}
+                  >
+                    &#10003;
+                  </button>
+                )}
+                <button
+                  type="button"
+                  name="remove"
+                  aria-label={`remove ${name}`}
+                  title="Remove"
+                  className="btn--remove"
+                  onClick={() => removeItem(name)}
+                >
+                  &times;
+                </button>
+              </div>
             </div>
           </li>
         );

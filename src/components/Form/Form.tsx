@@ -27,7 +27,7 @@ function Form({ addNewItem, setFeedback }: FormProps) {
 
     if (!newItem || newItem === "") {
       setFeedback({ msg: "Nothing to add", type: "error" });
-    } else if (items.indexOf(newItem) > -1) {
+    } else if (items.findIndex(it => it.name === newItem) > -1) {
       setFeedback({ msg: "Item already added", type: "error" });
     } else {
       addNewItem(newItem);
@@ -51,7 +51,7 @@ function Form({ addNewItem, setFeedback }: FormProps) {
         name="add"
         aria-label="add"
         title="Add"
-        className="btn-add"
+        className="btn--add"
         disabled={item.trim() === ""}
       >
         +

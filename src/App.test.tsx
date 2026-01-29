@@ -30,10 +30,10 @@ describe("App", () => {
     render(<App />);
 
     const input = screen.getByRole("textbox", { name: "Add an item:" });
-    const addBtn: HTMLButtonElement = screen.getByRole("button", { name: "add" });
+    const btnAdd: HTMLButtonElement = screen.getByRole("button", { name: "add" });
 
     await user.type(input, "Milk");
-    await user.click(addBtn);
+    await user.click(btnAdd);
 
     const list = screen.getByRole("list");
 
@@ -41,22 +41,44 @@ describe("App", () => {
     expect(list).toHaveTextContent("Milk");
 
     await user.type(input, "Butter");
-    await user.click(addBtn);
+    await user.click(btnAdd);
 
     expect(list.children).toHaveLength(2);
     expect(list).toHaveTextContent("Butter");
 
-    const removeMilkBtn = screen.getByRole("button", { name: /remove milk/i });
-    const removeButterBtn = screen.getByRole("button", { name: /remove butter/i });
+    const btnRemoveMilk = screen.getByRole("button", { name: /remove milk/i });
+    const btnRemoveButter = screen.getByRole("button", { name: /remove butter/i });
 
-    await user.click(removeMilkBtn);
+    await user.click(btnRemoveMilk);
 
     expect(list).toBeInTheDocument();
     expect(list.children).toHaveLength(1);
     expect(list).not.toHaveTextContent("Milk");
 
-    await user.click(removeButterBtn);
+    await user.click(btnRemoveButter);
 
     expect(list).not.toBeInTheDocument();
+  });
+
+  test("Item can be crossed off", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const input = screen.getByRole("textbox", { name: "Add an item:" });
+    const btnAdd: HTMLButtonElement = screen.getByRole("button", { name: "add" });
+
+    await user.type(input, "Milk");
+    await user.click(btnAdd);
+
+    const list = screen.getByRole("list");
+
+    expect(list.children).toHaveLength(1);
+    expect(list).toHaveTextContent("Milk");
+
+    const btnCrossOffMilk = screen.getByRole("button", { name: /cross off milk/i });
+    await user.click(btnCrossOffMilk);
+
+    expect(btnCrossOffMilk).not.toBeInTheDocument();
   });
 });

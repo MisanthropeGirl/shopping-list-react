@@ -59,13 +59,18 @@ describe("Form", () => {
     fireEvent.submit(form);
 
     expect(input).toHaveValue("   ");
-    // expect(screen.queryByText(/Nothing to add/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "add" })).toBeDisabled();
   });
 
   test("Should do nothing there is a duplicate item", async () => {
     const user = userEvent.setup();
 
-    const items = ["Milk", "Butter", "Cheese", "Yogurt"];
+    const items = [
+      { name: "Milk", crossedOff: false },
+      { name: "Butter", crossedOff: false },
+      { name: "Cheese", crossedOff: false },
+      { name: "Yogurt", crossedOff: false },
+    ];
     render(
       <ShoppingListContext value={items}>
         <Form addNewItem={addNewItem} setFeedback={setFeedback} />
@@ -80,7 +85,6 @@ describe("Form", () => {
 
     expect(input).toHaveValue("Milk");
     expect(btn.disabled).toBe(false);
-    // expect(screen.queryByText(/Item already added/)).toBeInTheDocument();
   });
 
   test("Should reset the form when an item is successfully added", async () => {
@@ -96,6 +100,5 @@ describe("Form", () => {
 
     expect(input).toHaveValue("");
     expect(btn.disabled).toBe(true);
-    // expect(screen.queryByText(/Item added/)).toBeInTheDocument();
   });
 });

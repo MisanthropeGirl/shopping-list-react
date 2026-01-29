@@ -7,38 +7,38 @@ test.describe("Functionality", () => {
 
   test("Button should not be enabled when input is just spaces", async ({ page }) => {
     const input = page.getByRole("textbox", { name: "Add an item:" });
-    const button = page.getByRole("button", { name: /add/i });
+    const btn = page.getByRole("button", { name: /add/i });
 
     await input.fill("   ");
-    await expect(button).toBeDisabled();
+    await expect(btn).toBeDisabled();
   });
 
   test("Button should be enabled when there is a valid input and disabled when not", async ({
     page,
   }) => {
     const input = page.getByRole("textbox", { name: "Add an item:" });
-    const button = page.getByRole("button", { name: /add/i });
+    const btn = page.getByRole("button", { name: /add/i });
 
     await input.fill("Milk");
-    await expect(button).toBeEnabled();
+    await expect(btn).toBeEnabled();
 
     await input.clear();
-    await expect(button).toBeDisabled();
+    await expect(btn).toBeDisabled();
   });
 
   test("Should show a success message and reset the form when an item is successfully added", async ({
     page,
   }) => {
     const input = page.getByRole("textbox", { name: "Add an item:" });
-    const button = page.getByRole("button", { name: /add/i });
+    const btn = page.getByRole("button", { name: /add/i });
 
     await input.fill("Milk");
-    await button.click();
+    await btn.click();
 
     const list = page.getByRole("list");
 
     await expect(input).toHaveValue("");
-    await expect(button).toBeDisabled();
+    await expect(btn).toBeDisabled();
     await expect(list).toBeVisible;
     await expect(list).toContainText("Milk");
 
@@ -49,20 +49,20 @@ test.describe("Functionality", () => {
 
   test("Should show an error message when there is a duplicate item", async ({ page }) => {
     const input = page.getByRole("textbox", { name: "Add an item:" });
-    const button = page.getByRole("button", { name: /add/i });
+    const btn = page.getByRole("button", { name: /add/i });
 
     await input.fill("Milk");
-    await button.click();
+    await btn.click();
 
     await expect(input).toHaveValue("");
-    await expect(button).toBeDisabled();
+    await expect(btn).toBeDisabled();
     await expect(page.getByRole("list")).toContainText("Milk");
 
     await input.fill("Milk");
-    await button.click();
+    await btn.click();
 
     await expect(input).toHaveValue("Milk");
-    await expect(button).toBeEnabled();
+    await expect(btn).toBeEnabled();
 
     const msg = page.getByTestId("feedback");
     await expect(msg).toHaveText(/Item already added/);
@@ -93,7 +93,20 @@ test.describe("Functionality", () => {
 
     await btnRemoveButter.click();
 
-    expect(list).not.toBeVisible();
+    await expect(list).not.toBeVisible();
     await expect(page.getByText(/Your shopping list is currently empty/)).toBeVisible();
+  });
+
+  test("Should allow an item to be crossed off the list", async ({ page }) => {
+    const input = page.getByRole("textbox", { name: "Add an item:" });
+    const btnAdd = page.getByRole("button", { name: /add/i });
+
+    await input.fill("Milk");
+    await btnAdd.click();
+
+    const btnCrossOffMilk = page.getByRole("button", { name: /cross off milk/i });
+    await btnCrossOffMilk.click();
+
+    await expect(btnCrossOffMilk).not.toBeVisible();
   });
 });

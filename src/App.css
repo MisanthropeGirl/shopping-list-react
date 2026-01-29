@@ -73,6 +73,29 @@ input {
   flex: 1;
 }
 
+s::before,
+s::after {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(100%);
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+s::before {
+  content: " [start of stricken text] ";
+}
+
+s::after {
+  content: " [end of stricken text] ";
+}
+
+.item__btns button:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
 .item button {
   height: 24px;
   width: 24px;
@@ -80,11 +103,15 @@ input {
   border-radius: 50%;
 }
 
-.btn-add:not(:disabled) {
+.btn--add:not(:disabled) {
+  background-color: #00b0ff;
+}
+
+.btn--cross-off {
   background-color: #11ff00;
 }
 
-.btn-remove {
+.btn--remove {
   background-color: red;
   color: white;
 }

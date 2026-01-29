@@ -1,3 +1,4 @@
 import { createContext } from "react";
+import type { Item } from "../typings";
 
-export const ShoppingListContext = createContext<string[]>([]);
+export const ShoppingListContext = createContext<Item[]>([]);

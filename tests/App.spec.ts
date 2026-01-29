@@ -20,14 +20,14 @@ test.describe("Setup", () => {
 
   test("Form is present", async ({ page }) => {
     const input = page.getByRole("textbox", { name: "Add an item:" });
-    const button = page.getByRole("button", { name: /add/i });
+    const btn = page.getByRole("button", { name: /add/i });
 
     await expect(page.getByLabel(/Add an item/)).toBeVisible();
 
     await expect(input).toBeVisible();
     await expect(input).toHaveValue("");
 
-    await expect(button).toBeVisible();
-    await expect(button).toBeDisabled();
+    await expect(btn).toBeVisible();
+    await expect(btn).toBeDisabled();
   });
 });

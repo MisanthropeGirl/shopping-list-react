@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { Feedback } from "./typings";
+import { useImmer } from "use-immer";
+import type { Feedback, Item } from "./typings";
 import { ShoppingListContext } from "./app/ShoppingListContext";
 import Message from "./components/Message/Message";
 import Form from "./components/Form/Form";
@@ -7,16 +8,24 @@ import List from "./components/List/List";
 import "./App.css";
 
 function App() {
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useImmer<Item[]>([]);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
 
-  const addNewItem = (newItem: string) => {
+  const addNewItem = (name: string) => {
+    const newItem: Item = { name, crossedOff: false };
     setItems([...items, newItem]);
   };
 
-  const removeUnwantedItem = (unwanted: string) => {
-    setItems(items.filter(it => it !== unwanted));
+  const removeUnwantedItem = (name: string) => {
+    setItems(items.filter(it => it.name !== name));
     setFeedback({ msg: "Item removed" });
+  };
+
+  const crossOffItem = (name: string) => {
+    const itemIndex = items.findIndex(it => it.name === name);
+    setItems(draft => {
+      draft[itemIndex].crossedOff = true;
+    });
   };
 
   return (
@@ -28,7 +37,11 @@ function App() {
         <ShoppingListContext value={items}>
           <Form addNewItem={addNewItem} setFeedback={setFeedback} />
           <Message feedback={feedback} />
-          <List removeUnwantedItem={removeUnwantedItem} setFeedback={setFeedback} />
+          <List
+            crossOffItem={crossOffItem}
+            removeUnwantedItem={removeUnwantedItem}
+            setFeedback={setFeedback}
+          />
         </ShoppingListContext>
       </main>
       <footer></footer>
