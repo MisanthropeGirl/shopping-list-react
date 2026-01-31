@@ -77,8 +77,10 @@ describe("App", () => {
     expect(list).toHaveTextContent("Milk");
 
     const btnCrossOffMilk = screen.getByRole("button", { name: /cross off milk/i });
+    const btnRemoveMilk = screen.getByRole("button", { name: /remove milk/i });
     await user.click(btnCrossOffMilk);
 
     expect(btnCrossOffMilk).not.toBeInTheDocument();
+    expect(btnRemoveMilk).not.toBeInTheDocument();
   });
 });

@@ -32,27 +32,29 @@ function List({ removeUnwantedItem, setFeedback, crossOffItem }: ListProps) {
               <span className="item__name">{displayName}</span>
               <div className="item__btns">
                 {!item.crossedOff && (
-                  <button
-                    type="button"
-                    name="cross-off"
-                    aria-label={`cross off ${name}`}
-                    title="Cross off"
-                    className="btn--cross-off"
-                    onClick={() => crossOffItem(name)}
-                  >
-                    &#10003;
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      name="cross-off"
+                      aria-label={`cross off ${name}`}
+                      title="Cross off"
+                      className="btn--cross-off"
+                      onClick={() => crossOffItem(name)}
+                    >
+                      &#10003;
+                    </button>
+                    <button
+                      type="button"
+                      name="remove"
+                      aria-label={`remove ${name}`}
+                      title="Remove"
+                      className="btn--remove"
+                      onClick={() => removeItem(name)}
+                    >
+                      &times;
+                    </button>
+                  </>
                 )}
-                <button
-                  type="button"
-                  name="remove"
-                  aria-label={`remove ${name}`}
-                  title="Remove"
-                  className="btn--remove"
-                  onClick={() => removeItem(name)}
-                >
-                  &times;
-                </button>
               </div>
             </div>
           </li>

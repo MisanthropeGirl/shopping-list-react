@@ -104,9 +104,11 @@ test.describe("Functionality", () => {
     await input.fill("Milk");
     await btnAdd.click();
 
+    const btnRemoveMilk = page.getByRole("button", { name: /remove milk/i });
     const btnCrossOffMilk = page.getByRole("button", { name: /cross off milk/i });
     await btnCrossOffMilk.click();
 
     await expect(btnCrossOffMilk).not.toBeVisible();
+    await expect(btnRemoveMilk).not.toBeVisible();
   });
 });
